@@ -5,16 +5,26 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"github.com/jmservic/pokedexcli/internal/pokeapi"
 )
 
 type cliCommand struct {
 	name string
 	description string
-	callback func() error
+	callback func(*config) error
+	config *config
 }
 
-func startRepl() {
+type config struct {
+	pokeapiClient *pokeapi.Client
+	Next *string
+	Previous *string
+}
+
+
+func startRepl(c *pokeapi.Client) {
 	scanner := bufio.NewScanner(os.Stdin)
+	commands := getCommands(c)
 	for {
 		fmt.Print("Pokedex > ")
 		ok := scanner.Scan()
@@ -28,13 +38,13 @@ func startRepl() {
 			continue
 		}
 
-		command, exists := getCommands()[inputWords[0]]
+		command, exists := commands[inputWords[0]]
 		if !exists {
 			fmt.Println("Unknown command.")
 			continue
 		}
 
-		err := command.callback()
+		err := command.callback(command.config)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -42,33 +52,43 @@ func startRepl() {
 }
 
 func cleanInput(text string) []string {
-/*	splitStrs := strings.Split(text, " ")
-	var cleanInputs []string
-
-	for _, s := range splitStrs {
-		normValue := strings.ToLower(strings.TrimSpace(s))
-		if normValue == "" {
-			continue
-		}
-		cleanInputs = append(cleanInputs, normValue)
-	}
-*/
 	output := strings.ToLower(text)
 	cleanInputs := strings.Fields(output)
 	return cleanInputs
 }
 
-func getCommands() map[string]cliCommand {
+func getCommands(c *pokeapi.Client) map[string]cliCommand {
+	defaultConfig := config{
+		pokeapiClient: c,
+	}
+	mapConfig := config{
+		pokeapiClient: c,
+	}
+
 	return map[string]cliCommand {
 	"exit": {
 		name: "exit",
 		description: "Exit the Pokedex",
 		callback: commandExit,
+		config: &defaultConfig,
 	},
 	"help": {
 		name: "help",
 		description: "Displays a help message",
 		callback: commandHelp,
+		config: &defaultConfig,
+	},
+	"map": {
+		name: "map",
+		description: "Displays next 20 location in the Pokemon world.",
+		callback: commandMapf,
+		config: &mapConfig,
+	},
+	"mapb": {
+		name: "mapb",
+		description: "Displays the previous 20 locations in the Pokemon world.",
+		callback: commandMapb,
+		config: &mapConfig,
 	},
 }
 

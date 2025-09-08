@@ -2,13 +2,13 @@ package main
 
 import "fmt"
 
-func commandHelp() error {
+func commandHelp(c *config) error {
 	fmt.Print(`Welcome to the Pokedex!
 Usage:
 
 `)
 
-	for _, cmd := range getCommands() {
+	for _, cmd := range getCommands(c.pokeapiClient) {
 		fmt.Printf("%s: %s\n", cmd.name, cmd.description)
 	}
 	fmt.Println()
