@@ -30,7 +30,7 @@ func startRepl(c *pokeapi.Client) {
 		ok := scanner.Scan()
 
 		if !ok {
-			fmt.Errorf("Error scanning user input: %w", scanner.Err)
+			fmt.Errorf("Error scanning user input: %w", scanner.Err())
 		}
 
 		inputWords := cleanInput(scanner.Text())
