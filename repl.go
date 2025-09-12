@@ -19,6 +19,7 @@ type config struct {
 	pokeapiClient *pokeapi.Client
 	Next *string
 	Previous *string
+	Args []string
 }
 
 
@@ -43,8 +44,15 @@ func startRepl(c *pokeapi.Client) {
 			fmt.Println("Unknown command.")
 			continue
 		}
+		
+		if len(inputWords) > 1 {
+			command.config.Args = inputWords[1:]
+		} else {
+			command.config.Args = nil
+		}
 
 		err := command.callback(command.config)
+
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -89,6 +97,12 @@ func getCommands(c *pokeapi.Client) map[string]cliCommand {
 		description: "Displays the previous 20 locations in the Pokemon world.",
 		callback: commandMapb,
 		config: &mapConfig,
+	},
+	"explore": {
+		name: "explore",
+		description: "Explores the the given location name or id (explore <NAME | ID>), printing pokemon at the location.",
+		callback: commandExplore,
+		config: &defaultConfig,
 	},
 }
 

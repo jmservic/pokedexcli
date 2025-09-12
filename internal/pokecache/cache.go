@@ -3,18 +3,20 @@ package pokecache
 import (
 	"time"
 	"sync"
+	//"fmt"
 )
 
-func NewCache(interval time.Duration) *Cache {
+func NewCache(interval time.Duration) Cache {
 	cache := Cache{
 		data: map[string]cacheEntry{},
-		mu: sync.Mutex{},
+		mu: &sync.Mutex{},
 	}
 	cache.reapLoop(interval)
-	return &cache
+	return cache
 }
 
 func (c *Cache) Add(key string, val []byte) {
+	//fmt.Printf("Pass by Pointer Mutex address: %p\n", (c.mu))
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.data[key] = cacheEntry{
@@ -24,6 +26,7 @@ func (c *Cache) Add(key string, val []byte) {
 }
 
 func (c Cache) Get(key string) ([]byte, bool) {
+	//fmt.Printf("Pass by Value Mutex address: %p\n", (c.mu))
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	entry, ok := c.data[key]
@@ -34,15 +37,18 @@ func (c Cache) Get(key string) ([]byte, bool) {
 }
 
 func (c *Cache) reapLoop(interval time.Duration) {
-	ticker := time.NewTicker(interval)
+	tickerChan := time.Tick(interval)
 
 	go func() {
 		for {
-			currTime := <-ticker.C
+			currTime := <-tickerChan
+			//fmt.Println("\nReaping...\n")
 			c.mu.Lock()
 			for key, entry := range c.data {
-				elapsed := entry.createdAt.Sub(currTime)
+				elapsed := currTime.Sub(entry.createdAt)
+				//fmt.Println("%d time elapsed", elapsed) 
 				if elapsed >= interval {
+				//	fmt.Println("Reaping %s", key)
 					delete(c.data, key)
 				}
 			}
