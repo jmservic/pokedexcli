@@ -4,13 +4,13 @@ import (
 	"fmt"
 )
 
-func commandMapf(c *config) error {
-	data, err := c.pokeapiClient.ListLocations(c.Next)
+func commandMapf(c *config, args ...string) error {
+	data, err := c.pokeapiClient.ListLocations(c.nextLocationsURL)
 	if err != nil {
 		return err//fmt.Errorf("Error getting pokeapi locations: %w", err)
 	}
-	c.Previous = data.Previous
-	c.Next = data.Next
+	c.prevLocationsURL = data.Previous
+	c.nextLocationsURL = data.Next
 
 	for _, loc := range data.Results {
 		fmt.Println(loc.Name)
@@ -19,18 +19,18 @@ func commandMapf(c *config) error {
 	return nil
 }
 
-func commandMapb(c *config) error {
-	if c.Previous == nil {
+func commandMapb(c *config, args ...string) error {
+	if c.prevLocationsURL == nil {
 		fmt.Println("you're on the first page")
 		return nil
 	}
 	
-	data, err := c.pokeapiClient.ListLocations(c.Previous)
+	data, err := c.pokeapiClient.ListLocations(c.prevLocationsURL)
 	if err != nil {
 		return err
 	}
-	c.Next = data.Next
-	c.Previous = data.Previous
+	c.nextLocationsURL = data.Next
+	c.prevLocationsURL = data.Previous
 
 	for _, loc := range data.Results {
 		fmt.Println(loc.Name)

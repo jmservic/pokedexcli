@@ -5,12 +5,12 @@ import (
 	"errors"
 )
 
-func commandExplore( c *config) error {
-	if c.Args == nil || len(c.Args) == 0 {
+func commandExplore( c *config, args ...string) error {
+	if args == nil || len(args) == 0 {
 		return errors.New("No Location name or id specified.")
 	}
-	fmt.Printf("Exploring %v...\n", c.Args[0])
-	data, err := c.pokeapiClient.ExploreLocation(c.Args[0])
+	fmt.Printf("Exploring %v...\n", args[0])
+	data, err := c.pokeapiClient.ExploreLocation(args[0])
 	if err != nil {
 		return err
 	}

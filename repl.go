@@ -11,22 +11,22 @@ import (
 type cliCommand struct {
 	name string
 	description string
-	callback func(*config) error
+	callback func(*config, ...string) error
 	config *config
 }
 
 type config struct {
-	pokeapiClient *pokeapi.Client
-	Next *string
-	Previous *string
-	Args []string
+	pokeapiClient pokeapi.Client
+	nextLocationsURL *string
+	prevLocationsURL *string
+	//Args []string
 	Pokemon map[string]pokeapi.Pokemon
 }
 
 
-func startRepl(c *pokeapi.Client) {
+func startRepl(c *config) {
 	scanner := bufio.NewScanner(os.Stdin)
-	commands := getCommands(c)
+	commands := getCommands()
 	for {
 		fmt.Print("Pokedex > ")
 		ok := scanner.Scan()
@@ -45,14 +45,16 @@ func startRepl(c *pokeapi.Client) {
 			fmt.Println("Unknown command.")
 			continue
 		}
+
+		var args []string
 		
 		if len(inputWords) > 1 {
-			command.config.Args = inputWords[1:]
+			args = inputWords[1:]
 		} else {
-			command.config.Args = nil
+			args = nil
 		}
 
-		err := command.callback(command.config)
+		err := command.callback(c, args...)
 
 		if err != nil {
 			fmt.Println(err)
@@ -66,50 +68,50 @@ func cleanInput(text string) []string {
 	return cleanInputs
 }
 
-func getCommands(c *pokeapi.Client) map[string]cliCommand {
-	defaultConfig := config{
+func getCommands() map[string]cliCommand {
+	/*defaultConfig := config{
 		pokeapiClient: c,
 	}
 	mapConfig := config{
 		pokeapiClient: c,
-	}
+	}*/
 
 	return map[string]cliCommand {
 	"exit": {
 		name: "exit",
 		description: "Exit the Pokedex",
 		callback: commandExit,
-		config: &defaultConfig,
+	//	config: &defaultConfig,
 	},
 	"help": {
 		name: "help",
 		description: "Displays a help message",
 		callback: commandHelp,
-		config: &defaultConfig,
+		//config: &defaultConfig,
 	},
 	"map": {
 		name: "map",
 		description: "Displays next 20 location in the Pokemon world.",
 		callback: commandMapf,
-		config: &mapConfig,
+		//config: &mapConfig,
 	},
 	"mapb": {
 		name: "mapb",
 		description: "Displays the previous 20 locations in the Pokemon world.",
 		callback: commandMapb,
-		config: &mapConfig,
+		//config: &mapConfig,
 	},
 	"explore": {
 		name: "explore",
 		description: "Explores the the given location name or id (explore <NAME | ID>), printing pokemon at the location.",
 		callback: commandExplore,
-		config: &defaultConfig,
+		//config: &defaultConfig,
 	},
 	"catch" : {
 		name: "catch",
 		description: "Attempts to catch the given pokemon (catch <NAME | ID>), printing whether it was successful.",
 		callback: commandCatch,
-		config: &defaultConfig,
+		//config: &defaultConfig,
 	},
 }
 

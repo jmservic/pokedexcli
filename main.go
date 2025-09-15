@@ -6,6 +6,8 @@ import (
 )
 
 func main() {
-	client := pokeapi.NewClient(5 * time.Second, 5 * time.Minute)
-	startRepl(&client)
+	con := &config {
+		pokeapiClient: pokeapi.NewClient(5 * time.Second, 5 * time.Minute),
+	}
+	startRepl(con)
 }
