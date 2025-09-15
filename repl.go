@@ -20,7 +20,7 @@ type config struct {
 	nextLocationsURL *string
 	prevLocationsURL *string
 	//Args []string
-	Pokemon map[string]pokeapi.Pokemon
+	caughtPokemon map[string]pokeapi.Pokemon
 }
 
 

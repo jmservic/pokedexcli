@@ -13,13 +13,13 @@ type Pokemon struct {
 		Stat struct {
 			Name string `json:"name"`
 			Url string `json:"url"`
-		}
-	}
+		} `json:"stat"`
+	} `json:"stats"` 
 	Types []struct {
 		Slot int `json:"slot"`
 		Type struct {
 			Name string `json:"name"`
 			Url string `json:"url"`
-		}
-	}
+		} `json:"type"`
+	} `json:"types"`
 }
