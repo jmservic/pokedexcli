@@ -77,42 +77,51 @@ func getCommands() map[string]cliCommand {
 	}*/
 
 	return map[string]cliCommand {
-	"exit": {
-		name: "exit",
-		description: "Exit the Pokedex",
-		callback: commandExit,
-	//	config: &defaultConfig,
-	},
-	"help": {
-		name: "help",
-		description: "Displays a help message",
-		callback: commandHelp,
-		//config: &defaultConfig,
-	},
-	"map": {
-		name: "map",
-		description: "Displays next 20 location in the Pokemon world.",
-		callback: commandMapf,
-		//config: &mapConfig,
-	},
-	"mapb": {
-		name: "mapb",
-		description: "Displays the previous 20 locations in the Pokemon world.",
-		callback: commandMapb,
-		//config: &mapConfig,
-	},
-	"explore": {
-		name: "explore",
-		description: "Explores the the given location name or id (explore <NAME | ID>), printing pokemon at the location.",
-		callback: commandExplore,
-		//config: &defaultConfig,
-	},
-	"catch" : {
-		name: "catch",
-		description: "Attempts to catch the given pokemon (catch <NAME | ID>), printing whether it was successful.",
-		callback: commandCatch,
-		//config: &defaultConfig,
-	},
-}
-
+		"exit": {
+			name: "exit",
+			description: "Exit the Pokedex",
+			callback: commandExit,
+		//	config: &defaultConfig,
+		},
+		"help": {
+			name: "help",
+			description: "Displays a help message",
+			callback: commandHelp,
+			//config: &defaultConfig,
+		},
+		"map": {
+			name: "map",
+			description: "Displays next 20 location in the Pokemon world.",
+			callback: commandMapf,
+			//config: &mapConfig,
+		},
+		"mapb": {
+			name: "mapb",
+			description: "Displays the previous 20 locations in the Pokemon world.",
+			callback: commandMapb,
+			//config: &mapConfig,
+		},
+		"explore": {
+			name: "explore",
+			description: "Explores the the given location name or id (explore <NAME | ID>), printing pokemon at the location.",
+			callback: commandExplore,
+			//config: &defaultConfig,
+		},
+		"catch" : {
+			name: "catch",
+			description: "Attempts to catch the given pokemon (catch <NAME | ID>), printing whether it was successful.",
+			callback: commandCatch,
+			//config: &defaultConfig,
+		},
+		"inspect" : {
+			name: "inspect",
+			description: "Displays the name, height, weight, stats, and type(s) of the given pokemon (inspect <NAME>)",
+			callback: commandInspect,
+		},
+		"pokedex" : {
+			name: "pokedex",
+			description: "Displays the names of all caught pokemon.",
+			callback: commandPokedex,
+		},
+	}
 }

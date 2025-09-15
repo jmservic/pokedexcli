@@ -23,6 +23,7 @@ func commandCatch(c *config, args ...string) error {
 	//fmt.Printf("Catch Rate: %.3v, Roll: %.3v\n", catchRate, roll)
 	if roll < catchRate {
 		fmt.Printf("%v was captured!!\n", pokemon.Name)
+		fmt.Println("You may now inspect it with the inspect command.")
 		c.caughtPokemon[pokemon.Name] = pokemon
 	} else {
 		fmt.Printf("%v broke out of the pokeball!\n", pokemon.Name)
